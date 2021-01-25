@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Please provide the expense details:</p>
+    <form method="POST" action="/submit-expense">
+        <input type="text" name="category" />
+        <input type="text" name="recipient" />
+        <input type="text" name="description" />
+        <input type="text" name="amount" />
+        <input type="text" name="tags" />
+        <input type="submit" />
+    </form>
+  </body>
+</html>
