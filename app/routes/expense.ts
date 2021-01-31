@@ -10,9 +10,7 @@ expenseRouter.get('/:id', (req:express.Request, res:express.Response, next:expre
     Axios.get(`http://localhost:8080/expenses/${id}`)
     .then((response:AxiosResponse)=> {
         const expenseItem = response.data
-        console.log(expenseItem)
         expenseItem.createtime = new Date(expenseItem.createtime)
-        console.log(expenseItem)
         res.render('expense',{title: 'View expense item:', expenseItem});
       })
     .catch((error:AxiosError)=> {
@@ -44,10 +42,13 @@ expenseRouter.post('/submit-expense', (req:express.Request, res:express.Response
         tags
       })
       .then((response:AxiosResponse)=> {
-        console.log(response);
+        console.log(response)
+        const expenseItem = response.data
+        expenseItem.createtime = new Date(expenseItem.createtime)
+        res.render('expense',{title: 'View expense item:', expenseItem})
       })
       .catch((error:AxiosError)=> {
-        console.log(error);
+        console.log(error)
+        res.end()
       });
-    res.end()
 })
