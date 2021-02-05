@@ -7,6 +7,7 @@ import logger = require('morgan');
 import {indexRouter} from './routes/index';
 import {usersRouter} from './routes/users';
 import {expenseRouter} from './routes/expense';
+import {expensesRouter} from './routes/expenses';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/css", express.static(path.join(__dirname, 'css')))
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/expense', expenseRouter);
+app.use('/expenses', expensesRouter);
 
 // catch 404 and forward to error handler
 app.use((req:express.Request, res:express.Response, next:express.NextFunction)=>

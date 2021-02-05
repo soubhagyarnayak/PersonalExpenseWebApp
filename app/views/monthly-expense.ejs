@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/css/bootstrap.min.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Monthly Expenses:</p>
+    <h2><%= label %></h2>
+    <h2>Total: <%= total %></h2>
+    <h2>Total Investments: <%= totalInvestments %></h2>
+    <h2>Total Expenditure: <%= totalExpenditures %></h2>
+    <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">CreateTime</th>
+            <th scope="col">Category</th>
+            <th scope="col">Recipient</th>
+            <th scope="col">Description</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i < expenseItems.length; i++) { %>
+                <tr>
+                  <td><%= expenseItems[i].createtime.toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) %></td>
+                  <td><%= expenseItems[i].category %></td>
+                  <td><%= expenseItems[i].recipient %></td>
+                  <td><%= expenseItems[i].description %></td>
+                  <td><%= expenseItems[i].amount %></td>
+                  <td><%= expenseItems[i].tags %></td>
+                </tr>
+             <% } %>
+        </tbody>
+      </table>
+  </body>
+</html>
