@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/css", express.static(path.join(__dirname, 'css')))
+app.use("/scripts", express.static(path.join(__dirname, 'scripts')))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

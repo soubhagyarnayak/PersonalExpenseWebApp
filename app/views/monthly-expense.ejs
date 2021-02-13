@@ -34,6 +34,75 @@
                 </tr>
              <% } %>
         </tbody>
-      </table>
+    </table>
+    <br/>
+    <br/>
+    <div>
+      <div id='expenditureInvestmentChartContainer'>
+        <canvas id="expenditureInvestmentChart" width="200" height="200"></canvas>
+      </div>
+      <br/>
+      <div id="expenditureBreakupChartContainer">
+        <canvas id="expenditureBreakupChart" width="200" height="200"></canvas>
+      </div>
+    </div>
+    <script src='/scripts/chart.js'></script>
+    <script>
+      var context = document.getElementById('expenditureInvestmentChart');
+      var expenditureInvestmentChart = new Chart(context, {
+        type: 'bar', 
+        data: {
+          labels: ['Investment', 'Expenditure'],
+          datasets: [{
+            label: 'Investment vs Expenditure',
+            data: [<%=totalInvestments%>, <%=totalExpenditures%>],
+            borderWidth: 1,
+            backgroundColor :[
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 129, 102, 1)'
+            ]
+          }]
+        },
+        options:{
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+        }
+      },
+      );
+      var dynamicColors = function() {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+      }
+      var expenditureContext = document.getElementById('expenditureBreakupChart');
+      var expenditureChart = new Chart(expenditureContext, {
+        type: 'bar', 
+        data: {
+          labels: <%-JSON.stringify(expenditureLabels)%>,
+          datasets: [{
+            label: 'Expenditure Breakup',
+            data: <%-JSON.stringify(expenditureData)%>,
+            borderWidth: 1,
+            backgroundColor: dynamicColors()
+          }]
+        },
+        options:{
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+        }
+      },
+      );
+    </script>
   </body>
 </html>

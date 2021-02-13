@@ -3,3 +3,5 @@ import * as shell from "shelljs";
 // Copy all the view templates
 shell.cp( "-R", "views", "dist/" );
 shell.cp("-R", "node_modules/bootstrap/dist/css", "dist/")
+shell.mkdir("dist/scripts")
+shell.cp("node_modules/chart.js/dist/Chart.js", "dist/scripts/")

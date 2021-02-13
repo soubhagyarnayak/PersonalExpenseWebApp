@@ -14,6 +14,7 @@ expensesRouter.get('/monthly', (req:express.Request, res:express.Response, next:
         let total = 0
         let totalInvestments = 0
         let totalExpenditures = 0
+        const expenditureMap = new Map()
         expenseItems.forEach((expenseItem: { createtime: string | number | Date; amount: number; category: string; }) => {
             expenseItem.createtime = new Date(expenseItem.createtime)
             total += expenseItem.amount
@@ -21,13 +22,25 @@ expensesRouter.get('/monthly', (req:express.Request, res:express.Response, next:
                 totalInvestments += expenseItem.amount
             } else {
                 totalExpenditures += expenseItem.amount
+                if(expenditureMap.has(expenseItem.category)){
+                    const oldValue = expenditureMap.get(expenseItem.category)
+                    expenditureMap.set(expenseItem.category, oldValue+expenseItem.amount)
+                } else {
+                    expenditureMap.set(expenseItem.category, expenseItem.amount)
+                }
             }
         });
         expenseItems.sort((x: { createtime: number; },y: { createtime: number; })=>{
             return x.createtime-y.createtime
         })
+        const expenditureLabels = Array()
+        const expenditureData = Array()
+        for (const key of expenditureMap.keys()) {
+            expenditureLabels.push(key)
+            expenditureData.push(expenditureMap.get(key))
+        }
         res.render('monthly-expense',
-          {title: 'Monthly Expense', label, total, totalInvestments, totalExpenditures, expenseItems:response.data},
+          {title: 'Monthly Expense', label, total, totalInvestments, totalExpenditures, expenseItems:response.data, expenditureLabels, expenditureData},
         )
     })
     .catch((error:AxiosError)=>{
