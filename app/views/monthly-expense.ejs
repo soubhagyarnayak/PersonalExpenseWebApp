@@ -5,13 +5,27 @@
     <% include partials/head.ejs %>
   </head>
   <body>
-    <h1><%= title %></h1>
+    <h2><%= title %></h2>
     <p>Monthly Expenses:</p>
-    <h2><%= label %></h2>
-    <h2>Total: <%= total %></h2>
-    <h2>Total Investments: <%= totalInvestments %></h2>
-    <h2>Total Expenditure: <%= totalExpenditures %></h2>
-    <table class="table">
+    <h3><%= label %></h3>
+    <h3>Total: <%= total %></h3>
+    <h3>Total Investments: <%= totalInvestments %></h3>
+    <h3>Total Expenditure: <%= totalExpenditures %></h3>
+    <br/>
+    <br/>
+    <div>
+      <div id='expenditureInvestmentChartContainer'>
+        <canvas id="expenditureInvestmentChart" width="200" height="200"></canvas>
+      </div>
+      <br/>
+      <div id="expenditureBreakupChartContainer">
+        <canvas id="expenditureBreakupChart" width="200" height="200"></canvas>
+      </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="table-responsive">
+      <table class="table">
         <thead class="thead-light">
           <tr>
             <th scope="col">CreateTime</th>
@@ -34,17 +48,7 @@
                 </tr>
              <% } %>
         </tbody>
-    </table>
-    <br/>
-    <br/>
-    <div>
-      <div id='expenditureInvestmentChartContainer'>
-        <canvas id="expenditureInvestmentChart" width="200" height="200"></canvas>
-      </div>
-      <br/>
-      <div id="expenditureBreakupChartContainer">
-        <canvas id="expenditureBreakupChart" width="200" height="200"></canvas>
-      </div>
+      </table>
     </div>
     <script src='/scripts/chart.js'></script>
     <script>
