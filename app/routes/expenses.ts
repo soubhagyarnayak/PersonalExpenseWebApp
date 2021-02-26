@@ -1,16 +1,14 @@
-// tslint:disable:no-console
-import Axios , {AxiosResponse, AxiosError} from 'axios';
 import express = require('express')
+import { ExpenseServiceProxy } from './expenseProxy';
 export const expensesRouter = express.Router()
 
-expensesRouter.get('/monthly', (req:express.Request, res:express.Response, next:express.NextFunction) => {
+expensesRouter.get('/monthly', async (req:express.Request, res:express.Response, next:express.NextFunction) => {
     const date = new Date()
     const month = date.getMonth()+1
     const year = date.getFullYear()
     const label = date.toLocaleString('default', { month: 'long' }) +" "+ year;
-    Axios.get(`http://localhost:8080/expenses/${year}/${month}`)
-    .then((response:AxiosResponse)=>{
-        const expenseItems = response.data
+    try{
+        const expenseItems = await new ExpenseServiceProxy().getMonthlyExpenseItems(year,month)
         let total = 0
         let totalInvestments = 0
         let totalExpenditures = 0
@@ -30,8 +28,8 @@ expensesRouter.get('/monthly', (req:express.Request, res:express.Response, next:
                 }
             }
         });
-        expenseItems.sort((x: { createtime: number; },y: { createtime: number; })=>{
-            return x.createtime-y.createtime
+        expenseItems.sort((x,y)=>{
+            return x.createtime.getUTCDate() -y.createtime.getUTCDate()
         })
         const expenditureLabels = Array()
         const expenditureData = Array()
@@ -40,11 +38,9 @@ expensesRouter.get('/monthly', (req:express.Request, res:express.Response, next:
             expenditureData.push(expenditureMap.get(key))
         }
         res.render('monthly-expense',
-          {title: 'Monthly Expense', label, total, totalInvestments, totalExpenditures, expenseItems:response.data, expenditureLabels, expenditureData},
+          {title: 'Monthly Expense', label, total, totalInvestments, totalExpenditures, expenseItems, expenditureLabels, expenditureData},
         )
-    })
-    .catch((error:AxiosError)=>{
-        console.log(error)
+    } catch(error){
         res.end()
-    })
+    }
 });

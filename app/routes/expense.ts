@@ -1,21 +1,17 @@
-// tslint:disable:no-console
-import Axios , {AxiosResponse, AxiosError} from 'axios';
+import { ExpenseServiceProxy } from './expenseProxy'
 import express = require('express')
+import { ExpenseItem } from './expenseItem';
 export const expenseRouter = express.Router()
 
 /* GET expense page. */
-expenseRouter.get('/:id', (req:express.Request, res:express.Response, next:express.NextFunction) => {
+expenseRouter.get('/:id', async (req:express.Request, res:express.Response, next:express.NextFunction) => {
     const id = req.params.id
-    Axios.get(`http://localhost:8080/expenses/${id}`)
-    .then((response:AxiosResponse)=> {
-        const expenseItem = response.data
-        expenseItem.createtime = new Date(expenseItem.createtime)
-        res.render('expense',{title: 'View expense item:', expenseItem});
-      })
-    .catch((error:AxiosError)=> {
-        console.log(error);
-        res.end();
-      });
+    try{
+      const expenseItem = await new ExpenseServiceProxy().getExpenseItem(id)
+      res.render('expense',{title: 'View expense item:', expenseItem});
+    } catch(error){
+      res.end()
+    }
 });
 
 expenseRouter.get('/', (req:express.Request, res:express.Response, next:express.NextFunction) => {
@@ -23,30 +19,14 @@ expenseRouter.get('/', (req:express.Request, res:express.Response, next:express.
 });
 
 /* Save an expense item. */
-expenseRouter.post('/submit-expense', (req:express.Request, res:express.Response) => {
-    const category = req.body.category
-    const recipient = req.body.recipient
-    const description = req.body.description
-    const amount:number = req.body.amount
-    const createtime:Date = req.body.date
-    const tags = req.body.tags // req.body.tags.split(",")
-    console.info(category);
-    Axios.post('http://localhost:8080/expenses', {
-        category,
-        recipient,
-        description,
-        amount,
-        createtime,
-        tags
-      })
-      .then((response:AxiosResponse)=> {
-        console.log(response)
-        const expenseItem = response.data
-        expenseItem.createtime = new Date(expenseItem.createtime)
-        res.render('expense',{title: 'View expense item:', expenseItem})
-      })
-      .catch((error:AxiosError)=> {
-        console.log(error)
-        res.end()
-      });
+expenseRouter.post('/submit-expense', async(req:express.Request, res:express.Response) => {
+    let expenseItem = new ExpenseItem(
+      req.body.category, req.body.recipient, req.body.description,
+      req.body.amount, req.body.date, req.body.tags)
+    try{
+      expenseItem = await new ExpenseServiceProxy().saveExpenseItem(expenseItem)
+      res.render('expense',{title: 'View expense item:', expenseItem})
+    } catch(error){
+      res.end()
+    }
 })
