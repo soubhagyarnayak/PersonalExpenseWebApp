@@ -4,6 +4,15 @@ export const expensesRouter = express.Router()
 
 expensesRouter.get('/monthly', async (req:express.Request, res:express.Response, next:express.NextFunction) => {
     const date = new Date()
+    renderMonthlyExpenses(res,date)
+});
+
+expensesRouter.get('/year/:year/month/:month', async(req:express.Request, res:express.Response, next:express.NextFunction) =>{
+    const date = new Date(Number(req.params.year), Number(req.params.month))
+    await renderMonthlyExpenses(res,date)
+});
+
+async function renderMonthlyExpenses(res: express.Response, date:Date){
     const month = date.getMonth()+1
     const year = date.getFullYear()
     const label = date.toLocaleString('default', { month: 'long' }) +" "+ year;
@@ -43,4 +52,4 @@ expensesRouter.get('/monthly', async (req:express.Request, res:express.Response,
     } catch(error){
         res.end()
     }
-});
+}
